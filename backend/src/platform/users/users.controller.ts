@@ -4,6 +4,10 @@ import {
   Inject,
   Query,
   UseInterceptors,
+  Patch,
+  Param,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { User } from './entities';
 import { OrgJwtGuard } from '@core/auth/guards';
@@ -90,6 +94,36 @@ export class UsersController extends BaseController<User> {
     return {
       ...paginatedUsers,
       data: mappedData,
+    };
+  }
+
+  @Swag({
+    summary: 'Deactivate a user',
+    ok: { description: 'The deactivated user.', type: UserResponseDto },
+    bearer: true,
+    guards: [OrgJwtGuard],
+    orgHeader: true,
+  })
+  @Patch(':id/deactivate')
+  async deactivate(
+    @CurrentUser() currentUser: User,
+    @Param('id') id: string,
+  ): Promise<UserResponseDto> {
+    const deactivatedUser = await this.usersService.deactivate(currentUser, id);
+    return {
+      id: deactivatedUser.id,
+      email: deactivatedUser.email,
+      firstName: deactivatedUser.firstName,
+      lastName: deactivatedUser.lastName,
+      organization: deactivatedUser.organization
+        ? {
+            organizationName: deactivatedUser.organization.name,
+            organizationType: deactivatedUser.organization.type,
+            firstName: undefined,
+            lastName: undefined,
+            email: undefined,
+          }
+        : null,
     };
   }
 }
