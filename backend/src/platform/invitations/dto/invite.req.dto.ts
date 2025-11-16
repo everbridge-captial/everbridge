@@ -19,7 +19,7 @@ export class OrganizationInviteDto {
   @IsString()
   organizationName: string;
 
-  @ApiProperty({ enum: OrgType, default: OrgType.SUPPLIER })
+  @ApiProperty({ enum: OrgType, default: OrgType.SME })
   @IsEnum(OrgType)
   organizationType: OrgType;
 }

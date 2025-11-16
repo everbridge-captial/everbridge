@@ -33,7 +33,7 @@ export class Invitation extends BaseEntity {
   @Column({ nullable: true })
   organizationName: string;
 
-  @Column({ enum: OrgType, default: OrgType.SUPPLIER })
+  @Column({ enum: OrgType, default: OrgType.SME })
   organizationType: OrgType;
 
   @ManyToOne(() => Organization, { nullable: true })

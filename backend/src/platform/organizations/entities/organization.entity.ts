@@ -4,9 +4,9 @@ import { Column, Entity, OneToMany } from 'typeorm';
 
 export enum OrgType {
   PLATFORM = 'PLATFORM',
-  SUPPLIER = 'SUPPLIER', // Seller (Business / Supplier) // This is the company that issued the invoice
-  DEBTOR = 'DEBTOR', // Buyer (Customer / Debtor) // This is the company that owes payment on the invoice
-  LENDER = 'LENDER', // Financier (Lender / Factor / Investor) // pays the seller upfront for the invoice — usually 70–90% of its value.
+  BUYER = 'BUYER',
+  SME = 'SME',
+  BANK = 'BANK',
 }
 
 export enum OnboardingStatus {
@@ -18,7 +18,7 @@ export enum OnboardingStatus {
 export class Organization extends BaseEntity {
   @Column() name: string;
 
-  @Column({ enum: OrgType, default: OrgType.SUPPLIER })
+  @Column({ enum: OrgType, default: OrgType.SME })
   type: OrgType;
 
   @Column({ enum: OnboardingStatus, default: OnboardingStatus.INITITED })
