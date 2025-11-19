@@ -7,6 +7,7 @@ import {
   OnboardingApplication,
   OnboardingApplicationHistory,
 } from '@platform/onboarding/entities';
+import { Upload } from '@core/uploader';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import {
           Invitation,
           OnboardingApplication,
           OnboardingApplicationHistory,
+          Upload,
         ],
         migrations: [__dirname + '/../../../migrations/*.ts'], // Adjusted path
         synchronize: false,

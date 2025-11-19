@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { BaseEntity } from '@common/database/base.entity';
 import { Organization } from 'platform/organizations';
 import { OnboardingApplication } from '@platform/onboarding/entities';
+import { Upload } from '@core/uploader';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -35,4 +36,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => OnboardingApplication, (onboarding) => onboarding.owner)
   onboardingApplications: OnboardingApplication[];
+
+  @OneToMany(() => Upload, (upload) => upload.owner)
+  uploads: Upload[];
 }

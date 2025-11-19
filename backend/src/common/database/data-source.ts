@@ -6,6 +6,7 @@ import {
   OnboardingApplication,
   OnboardingApplicationHistory,
 } from '@platform/onboarding/entities';
+import { Upload } from '@core/uploader';
 
 config();
 
@@ -29,6 +30,7 @@ export const AppDataSource = new DataSource({
     Invitation,
     OnboardingApplication,
     OnboardingApplicationHistory,
+    Upload,
   ],
   migrations: ['migrations/*.ts'],
   synchronize: false,
