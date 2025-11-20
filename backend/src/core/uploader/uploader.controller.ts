@@ -2,18 +2,17 @@ import {
   Controller,
   Get,
   Param,
-  Query,
   ParseUUIDPipe,
   Inject,
   Post,
   UseInterceptors,
   UploadedFile,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiConsumes, ApiBody, ApiTags } from '@nestjs/swagger';
 import { UploaderService } from './uploader.service';
 import { InternalGuard, OrgJwtGuard } from '@core/auth/guards';
-import { PaginationQueryDto } from '@common/base';
-import { UploadsResDto, UploadResDto } from './dto';
+import { UploadResDto } from './dto';
 import { BaseController } from '@common/base/base.controller';
 import { Upload } from './entities/upload.entity';
 import { Swag } from '@common/decorators/generic-swag.decorator';
@@ -57,6 +56,15 @@ export class UploaderController extends BaseController<Upload> {
     @CurrentUser() user: User,
   ): Promise<ResponseDto<UploadResDto>> {
     const newUpload = await this.uploaderService.uploadFile(file, user);
+
+    if (newUpload instanceof Error) {
+      return {
+        message: 'File upload failed',
+        error: HttpStatus.BAD_REQUEST,
+        data: null,
+      };
+    }
+
     return {
       message: 'File uploaded successfully',
       data: new UploadResDto(newUpload),

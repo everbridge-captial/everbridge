@@ -6,11 +6,11 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigService } from '@nestjs/config';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Upload } from './entities/upload.entity';
 import { User } from '@platform/users/entities/user.entity';
 import { BaseService } from '@common/base';
 import { UploaderRepository } from './uploader.repository';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UploaderService extends BaseService<Upload> {
@@ -19,7 +19,6 @@ export class UploaderService extends BaseService<Upload> {
 
   constructor(
     private readonly configService: ConfigService,
-    @InjectRepository(Upload)
     private readonly uploadsRepository: UploaderRepository,
   ) {
     super(uploadsRepository, Upload);
@@ -39,8 +38,8 @@ export class UploaderService extends BaseService<Upload> {
   async uploadFile(
     file: { buffer: Buffer; originalname: string; mimetype: string },
     owner: User,
-  ): Promise<Upload> {
-    const key = `uploads/${owner.id}/${Date.now()}-${file.originalname}`;
+  ): Promise<Upload | Error> {
+    const key = `uploads/${owner.id}/${uuidv4()}-${Date.now()}-${file.originalname}`;
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,
@@ -49,11 +48,12 @@ export class UploaderService extends BaseService<Upload> {
       ContentType: file.mimetype,
     });
 
-    await this.s3Client.send(command);
-
-    const url = `https://${this.bucket}.s3.${this.configService.get(
-      'app.aws.s3.region',
-    )}.amazonaws.com/${key}`;
+    try {
+      await this.s3Client.send(command);
+    } catch (err) {
+      return new Error(`Failed to upload file.`);
+    }
+    const url = `${this.configService.get('app.aws.endpoint')}/${this.bucket}/${key}`;
 
     return await this.uploadsRepository.create({
       filename: file.originalname,
