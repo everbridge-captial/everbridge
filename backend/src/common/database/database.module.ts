@@ -6,6 +6,7 @@ import { Invitation } from '@platform/invitations/entities/Invitation.entity';
 import {
   OnboardingApplication,
   OnboardingApplicationHistory,
+  OnboardingApplicationUpload,
 } from '@platform/onboarding/entities';
 import { Upload } from '@core/uploader';
 
@@ -27,6 +28,7 @@ import { Upload } from '@core/uploader';
           OnboardingApplication,
           OnboardingApplicationHistory,
           Upload,
+          OnboardingApplicationUpload,
         ],
         migrations: [__dirname + '/../../../migrations/*.ts'], // Adjusted path
         synchronize: false,

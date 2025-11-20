@@ -1,6 +1,14 @@
 import { BaseEntity } from '@common/database/base.entity';
+import { OnboardingApplication } from '@platform/onboarding/entities';
 import { User } from '@platform/users/entities/user.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity('uploads')
 export class Upload extends BaseEntity {

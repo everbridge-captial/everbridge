@@ -4,10 +4,12 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BaseEntity } from '@common/database/base.entity';
 import { User } from '@platform/users';
+import { Upload } from '@core/uploader';
 
 export enum OnboardingType {
   SME_ONBOARDING = 'SME_ONBOARDING',
@@ -57,6 +59,9 @@ export class OnboardingApplication extends BaseEntity {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'ownerId' })
   owner: User;
+
+  @OneToMany(() => OnboardingApplicationUpload, (oau) => oau.application)
+  uploads: OnboardingApplicationUpload[];
 }
 
 export enum ApplicationAction {
@@ -96,4 +101,23 @@ export class OnboardingApplicationHistory extends BaseEntity {
 
   @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+}
+
+@Entity('onboarding_application_uploads')
+export class OnboardingApplicationUpload extends BaseEntity {
+  @ManyToOne(() => Upload, { eager: true })
+  @JoinColumn({ name: 'uploadId' })
+  upload: Upload;
+
+  @ManyToOne(() => OnboardingApplication, (app) => app.uploads, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'applicationId' })
+  application: OnboardingApplication;
+
+  @Column()
+  fieldKey: string;
+
+  @Column({ nullable: true })
+  notes?: string;
 }
