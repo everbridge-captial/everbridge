@@ -9,11 +9,24 @@ import {
 import { SmeOnboardingFormSchema } from './form-schema/sme-onboarding-form';
 import { BaseService } from '@common/base';
 import { Not } from 'typeorm';
+import { SMEOnboardingWorkflowArgs } from '@workflow-engine/workflows';
+import { TemporalService } from '@workflow-engine/temporal.service';
 
 @Injectable()
 export class OnboardingService extends BaseService<OnboardingApplication> {
-  constructor(private readonly onboardingRepo: OnboardingRepository) {
+  constructor(
+    private readonly onboardingRepo: OnboardingRepository,
+    private readonly temporal: TemporalService,
+  ) {
     super(onboardingRepo, OnboardingApplication);
+  }
+
+  async smeOnbaording(onboardingWorkflowArgs: SMEOnboardingWorkflowArgs) {
+    await this.temporal.start({
+      event: 'SMEOnboardingWorkflow',
+      eventId: `smeOnbaording-${onboardingWorkflowArgs.onboarding_record_id}`,
+      payload: onboardingWorkflowArgs,
+    });
   }
 
   async createdOnboardingApplication(data: {
@@ -53,10 +66,14 @@ export class OnboardingService extends BaseService<OnboardingApplication> {
     newOnboardingAppl.owner = data.initiator;
     newOnboardingAppl.registrationNumber = data.registrationNumber;
     newOnboardingAppl.organizationName = data.organizationName;
-    return await this.onboardingRepo.create(newOnboardingAppl);
-  }
 
-  saveOnboardingApplication() {
-    throw new Error('Not implemented!');
+    const createdOnboardingApplication =
+      await this.onboardingRepo.create(newOnboardingAppl);
+
+    this.smeOnbaording({
+      onboarding_record_id: createdOnboardingApplication.id,
+    });
+
+    return createdOnboardingApplication;
   }
 }
