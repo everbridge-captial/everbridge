@@ -13,7 +13,8 @@
     "paths": {
       "@platform/*": ["platform/*"],
       "@core/*": ["core/*"],
-      "@common/*": ["common/*"]
+      "@common/*": ["common/*"],
+      "@workflow-engine/*": ["workflow-engine/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

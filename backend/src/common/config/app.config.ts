@@ -31,6 +31,10 @@ export default registerAs('app', () => ({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     bucketName: process.env.AWS_BUCKET_NAME,
   },
+  temporal: {
+    host: process.env.TEMPORAL_HOST || 'localhost:7233',
+    namespace: process.env.TEMPORAL_NAMESPACE || 'default',
+  },
   email: {
     host: process.env.EMAIL_HOST,
     port: parseInt(process.env.EMAIL_PORT || '1025', 10),

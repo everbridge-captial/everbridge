@@ -6,6 +6,7 @@ import { OrganizationsModule } from '@platform/organizations/organization.module
 import { UsersModule } from '@platform/users/users.module';
 import { InvitationsModule } from '@platform/invitations/invitations.module';
 import { OnboardingModule } from '@platform/onboarding';
+import { WorkflowEngineModule } from '@workflow-engine/workflow-engine.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { OnboardingModule } from '@platform/onboarding';
     OrganizationsModule,
     CoreModule,
     InvitationsModule,
+    WorkflowEngineModule,
   ],
   controllers: [],
 })

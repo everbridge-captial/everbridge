@@ -6,7 +6,8 @@
     "paths": {
       "@platform/*": ["platform/*"],
       "@core/*": ["core/*"],
-      "@common/*": ["common/*"]
+      "@common/*": ["common/*"],
+      "@workflow-engine/*": ["workflow-engine/*"]
     }
   },
   "include": ["src/**/*", "migrations/**/*"]
